@@ -1,4 +1,4 @@
-package com.carolmusyoka.mercadeals.ui.theme
+package com.carolmusyoka.mercadeals.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

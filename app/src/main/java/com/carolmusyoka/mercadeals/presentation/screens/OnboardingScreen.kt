@@ -153,7 +153,7 @@ fun OnboardingScreen(navToSignUpScreen: () -> Unit, navToLoginScreen: () -> Unit
                 )
             ),
             onClick = {
-                navToLoginScreen()
+                navToSignUpScreen()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -171,7 +171,7 @@ fun OnboardingScreen(navToSignUpScreen: () -> Unit, navToLoginScreen: () -> Unit
         TransparentButton(
             indication = rememberRipple(color = background),
             onClick = {
-               navToSignUpScreen()
+               navToLoginScreen()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -180,6 +180,24 @@ fun OnboardingScreen(navToSignUpScreen: () -> Unit, navToLoginScreen: () -> Unit
         ) {
             Text(
                 text = "Login",
+                fontSize = TextUnit(14f, TextUnitType.Sp),
+                color = blueDark,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        TransparentButton(
+            indication = rememberRipple(color = background),
+            onClick = {
+                navToLoginScreen()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .padding(start = 24.dp, end = 24.dp, top = 8.dp)
+        ) {
+            Text(
+                text = "Continue as guest",
                 fontSize = TextUnit(14f, TextUnitType.Sp),
                 color = blueDark,
                 fontWeight = FontWeight.Bold

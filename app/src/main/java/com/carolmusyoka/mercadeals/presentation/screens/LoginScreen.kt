@@ -113,6 +113,7 @@ fun LoginScreen(
             TransparentButton(
                 indication = rememberRipple(color = background),
                 onClick = {
+                    navToForgotPasswordScreen()
                     },
                 modifier = Modifier
                     .align(Alignment.Start)
@@ -137,6 +138,7 @@ fun LoginScreen(
                     )
                 ),
                 onClick = {
+                          navToHomeScreen()
                     },
                 modifier = Modifier
                     .fillMaxWidth()

@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -27,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.carolmusyoka.mercadeals.R
 import com.carolmusyoka.mercadeals.domain.model.UiState
 import com.carolmusyoka.mercadeals.presentation.components.CustomTopBar
 import com.carolmusyoka.mercadeals.presentation.components.ProductCardItem
@@ -39,7 +37,9 @@ import com.carolmusyoka.mercadeals.presentation.viewmodel.ProductViewModel
 @Composable
 fun DashboardScreen(
     navToProfile:() -> Unit,
+    openDrawer:() -> Unit,
     navToProductDetail:() -> Unit,
+    navToSearch:() -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ProductViewModel = hiltViewModel()
 ) {
@@ -56,28 +56,18 @@ fun DashboardScreen(
         val context = LocalContext.current
         Column(modifier = Modifier.padding(30.dp)){
             // Custom TopBar goes here
-            CustomTopBar()
+            CustomTopBar(openDrawer)
             // Have this spacing for each section
             Spacer(modifier = Modifier.padding(10.dp))
             //Search Section
-            ProductsSearch()
+            ProductsSearch(navToSearch)
 
             Spacer(modifier = Modifier.height(24.dp))
-
-            ProductCategoryList()
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            //Product List Section
 
             ProductList(products, navToProductDetail)
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Recommended Section
-            RecommendedProducts()
-
-            // Chips showing different categories
         }
     }
         //Custom topbar? or just a header?
@@ -117,7 +107,7 @@ fun RecommendedProducts() {
 }
 
 @Composable
-fun ProductsSearch() {
+fun ProductsSearch(navToSearch: () -> Unit) {
     var search by remember { mutableStateOf("") }
 
     Column(modifier = Modifier
@@ -154,7 +144,7 @@ fun ProductsSearch() {
             horizontalArrangement = Arrangement.Start,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(78.dp)
+                .height(80.dp)
                 .padding(top = 30.dp)
         ){
             TextField(
@@ -193,11 +183,11 @@ fun ProductsSearch() {
 
                 ){
                 IconButton(
-                    onClick = { /*TODO*/ }
+                    onClick = navToSearch,
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_filter),
-                        contentDescription = "filter",
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "search",
                         modifier = Modifier.size(20.dp, 20.dp)
                     )
                 }
@@ -207,41 +197,12 @@ fun ProductsSearch() {
     }
 }
 
-@Composable
-fun ProductCategoryList() {
 
-    val categoryList = listOf("electronics",
-        "jewelery",
-        "men's clothing",
-        "women's clothing")
-    LazyRow(modifier = Modifier.fillMaxWidth()){
-        items(categoryList.size){  category ->
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(if (category == 2) lightGrey else Color.Transparent)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(
-                            start = 8.dp,
-                            end = 8.dp,
-                            top = 4.dp,
-                            bottom = 4.dp
-                        ),
-                    text = categoryList[category],
-                    color = eveningGlory
-                )
-            }
-        }
-    }
-
-}
 
 @Composable
 fun ProductList(products: State<UiState>, navToProductDetail: () -> Unit) {
   Column {
-      Title(text = "Products")
+      Title(text = "Products On Sale")
 
       LazyRow(content = {
           when{
@@ -267,6 +228,11 @@ fun ProductList(products: State<UiState>, navToProductDetail: () -> Unit) {
 @Composable
 fun PreviewSearchSection(){
     MercaDealsTheme {
-        DashboardScreen(navToProfile = { /*TODO*/ }, navToProductDetail = { /*TODO*/ })
+        DashboardScreen(
+            navToProfile = { /*TODO*/ },
+            openDrawer = { /*TODO*/ },
+            navToSearch = { /*TODO*/ },
+            navToProductDetail = { /*TODO*/ }
+        )
     }
 }

@@ -45,7 +45,7 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
       ExperimentalFoundationApi::class)
 
 @Composable
-fun OnboardingScreen(navToSignUpScreen: () -> Unit, navToLoginScreen: () -> Unit) {
+fun OnboardingScreen(navToSignUpScreen: () -> Unit, navToLoginScreen: () -> Unit, navToHomeScreen: () -> Unit) {
     val pagerState = rememberPagerState()
  // multiple lottie files
 
@@ -189,7 +189,7 @@ fun OnboardingScreen(navToSignUpScreen: () -> Unit, navToLoginScreen: () -> Unit
         TransparentButton(
             indication = rememberRipple(color = background),
             onClick = {
-                navToLoginScreen()
+                navToHomeScreen()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -210,5 +210,5 @@ fun OnboardingScreen(navToSignUpScreen: () -> Unit, navToLoginScreen: () -> Unit
 @Preview
 @Composable
 fun OnboardingScreenPreview() {
-    OnboardingScreen(navToSignUpScreen = {}, navToLoginScreen = {})
+    OnboardingScreen(navToSignUpScreen = {}, navToLoginScreen = {}, navToHomeScreen = {})
 }

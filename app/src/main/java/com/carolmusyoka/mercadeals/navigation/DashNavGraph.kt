@@ -24,7 +24,9 @@ object DashDestinations {
 fun NavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = DashDestinations.HOME_ROUTE
+    startDestination: String = DashDestinations.HOME_ROUTE,
+    openDrawer: () -> Unit,
+
 ) {
     val actions = remember { MainActions(navController) }
 
@@ -39,7 +41,9 @@ fun NavGraph(
             addHomeGraph(
                 navController = navController,
                 navToProductDetail = { actions.navigateToPlaceDetail("temp") },
-                modifier = modifier
+                openDrawer = openDrawer,
+                navToSearch = { navController.navigate(HomeTabs.SEARCH.route)},
+                modifier = modifier,
             )
         }
         composable(
@@ -50,7 +54,7 @@ fun NavGraph(
         ) {
             ProductDetailScreen(
                 navBack = { navController.navigateUp() },
-                navigateToFavorite = { navController.navigate(HomeTabs.FAVORITES.route) },
+                navigateToFavorite = { navController.navigate(HomeTabs.SEARCH.route) },
                 modifier = modifier,
                 navToPlaceDetail = { actions.navigateToPlaceDetail("temp") },
                 productId = "1"

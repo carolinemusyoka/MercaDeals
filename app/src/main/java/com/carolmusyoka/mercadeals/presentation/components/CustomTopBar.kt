@@ -21,7 +21,9 @@ import com.carolmusyoka.mercadeals.R
 import com.carolmusyoka.mercadeals.presentation.theme.blueDark
 
 @Composable
-fun CustomTopBar() {
+fun CustomTopBar(
+    openDrawer: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -34,7 +36,9 @@ fun CustomTopBar() {
             elevation = 5.dp,
             shape = RoundedCornerShape(12.dp)
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                openDrawer()
+            }) {
                 Icon(
                     imageVector = Icons.Outlined.Menu,
                     contentDescription = ""
@@ -99,7 +103,11 @@ fun TopAppBarWithBack(onBackClick: () -> Unit) {
 @Preview
 @Composable
 fun CustomTopBarPreview() {
-    CustomTopBar()
+    CustomTopBar(
+        openDrawer = {
+            println("Open Drawer")
+        }
+    )
 }
 
 @Preview

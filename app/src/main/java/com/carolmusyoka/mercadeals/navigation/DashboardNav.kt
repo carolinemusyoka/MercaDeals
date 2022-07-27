@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.carolmusyoka.mercadeals.presentation.MercaHomeDrawer
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
@@ -47,7 +48,10 @@ fun DashboardNav(
     ) { innerPadding ->
         NavGraph(
             modifier = Modifier.padding(innerPadding),
-            navController
+            navController,
+            openDrawer = { scope.launch{
+            scaffoldState.drawerState.open()
+        }}
         )
     }
 }

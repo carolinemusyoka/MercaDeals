@@ -175,7 +175,7 @@ fun RegistrationScreen(navToSignInScreen:() -> Unit, navToLoginScreen:() -> Unit
                     )
                 ),
                 onClick = {
-                    navToSignInScreen()
+                    navToHomeScreen()
                 },
                 modifier = Modifier
                     .fillMaxWidth()

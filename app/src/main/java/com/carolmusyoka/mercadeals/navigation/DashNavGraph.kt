@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
@@ -53,7 +52,8 @@ fun NavGraph(
                 navBack = { navController.navigateUp() },
                 navigateToFavorite = { navController.navigate(HomeTabs.FAVORITES.route) },
                 modifier = modifier,
-                navToPlaceDetail = { actions.navigateToPlaceDetail("temp") }
+                navToPlaceDetail = { actions.navigateToPlaceDetail("temp") },
+                productId = "1"
             )
         }
     }

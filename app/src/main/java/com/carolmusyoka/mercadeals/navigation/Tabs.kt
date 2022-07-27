@@ -18,6 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.carolmusyoka.mercadeals.presentation.screens.FavoriteScreen
 import com.carolmusyoka.mercadeals.presentation.screens.DashboardScreen
 import com.carolmusyoka.mercadeals.presentation.screens.ProfileScreen
+import com.carolmusyoka.mercadeals.presentation.viewmodel.ProductViewModel
 
 enum class HomeTabs(
     val title: String,

@@ -63,7 +63,10 @@ fun MainNavGraph(
         composable(
             route = MainScreen.LOGIN.route,
         ){
-            LoginScreen(navToSignUpScreen = {navController.navigate(DashDestinations.HOME_ROUTE)})
+            LoginScreen(
+                navToSignUpScreen = {navController.navigate(DashDestinations.HOME_ROUTE)},
+                navToForgotPasswordScreen = {},
+                navToHomeScreen = {navController.navigate(DashDestinations.HOME_ROUTE)})
         }
         composable(
             route = MainScreen.HOME.route,
@@ -73,6 +76,7 @@ fun MainNavGraph(
                 navToCart = {/*TODO*/},
                 navToBookmarks = {/*TODO*/},
                 navToProfile = {/*TODO*/},
+                modifier
             )
         }
     }

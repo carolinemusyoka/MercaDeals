@@ -11,8 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.carolmusyoka.mercadeals.presentation.MercaHomeDrawer
-import com.carolmusyoka.mercadeals.presentation.MercaTopBar
-import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
@@ -34,16 +32,6 @@ fun DashboardNav(
         backgroundColor = Color.White,
         drawerBackgroundColor = Color.White,
 
-        topBar = {
-        MercaTopBar(
-            navToProfile = { navController.navigate(HomeTabs.PROFILE.route) },
-            openDrawer = {
-                scope.launch {
-                    scaffoldState.drawerState.open()
-                }
-            }
-        )
-    },
         drawerContent = {
             MercaHomeDrawer(
                 navToProfile = {/*TODO*/},

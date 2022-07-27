@@ -6,12 +6,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -26,10 +26,7 @@ import coil.compose.rememberImagePainter
 import com.carolmusyoka.mercadeals.R
 import com.carolmusyoka.mercadeals.domain.model.Product
 import com.carolmusyoka.mercadeals.domain.model.Rating
-import com.carolmusyoka.mercadeals.domain.model.UiState
-import com.carolmusyoka.mercadeals.presentation.theme.blueDark
-import com.carolmusyoka.mercadeals.presentation.theme.lightGrey
-import com.carolmusyoka.mercadeals.presentation.theme.titleTextColor
+import com.carolmusyoka.mercadeals.presentation.theme.*
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalCoilApi::class)
 @Composable
@@ -39,7 +36,9 @@ fun ProductCardItem(product: Product,
     Card(
         modifier = Modifier
             .width(200.dp)
-            .height(300.dp),
+            .height(300.dp)
+            .padding(4.dp)
+        ,
         shape = RoundedCornerShape(16.dp),
         elevation = 2.dp,
         onClick = navPlaceDetail
@@ -140,10 +139,101 @@ fun ProductCardItem(product: Product,
     Spacer(modifier = Modifier.width(16.dp))
 }
 
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalCoilApi::class)
+@Composable
+fun SaveItemCard(
+    product: Product,
+    navProductDetail: () -> Unit
+) {
+    Card(
+        onClick = {},
+        elevation = 5.dp,
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Image(
+                painter = rememberImagePainter(product.image),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(width = 90.dp, height = 110.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+                Text(text = product.title, style = MaterialTheme.typography.button, fontSize = 18.sp)
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Rounded.Star,
+                        contentDescription = null,
+                        tint = orange,
+                        modifier = Modifier.padding(end = 2.dp)
+                    )
+                    Text(
+                        text = product.rating.rate.toString(),
+                        style = MaterialTheme.typography.body1,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(top = 2.dp)
+                    )
+                    Spacer(modifier = Modifier.width(40.dp))
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    blueDark,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 16.sp
+                                )
+                            ){
+                                append("$ ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    titleTextColor,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 16.sp
+                                )
+                            ){
+                                //populate product price
+                                append(product.price.toString())
+                            }
+                        },
+                        style = MaterialTheme.typography.subtitle1,
+                        modifier = Modifier,
+                        fontSize = 12.sp,
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ProductCardItemPreview() {
     ProductCardItem(
+        product = Product(
+            category = "Womens Clothing",
+            description = "Hello World",
+            id = 1,
+            image = "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80",
+            price = 0.00,
+            rating = Rating(rate = 4.5, count = 10),
+            title = "Hello",
+        ),
+        navPlaceDetail = { }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SaveItemPreview() {
+    SaveItemCard(
         product = Product(
             category = "",
             description = "",
@@ -156,7 +246,7 @@ fun ProductCardItemPreview() {
                 count = 10
             )
         ),
-        navPlaceDetail = { }
+        navProductDetail = {}
     )
 }
 

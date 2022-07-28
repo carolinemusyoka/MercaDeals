@@ -1,7 +1,7 @@
 package com.carolmusyoka.mercadeals.domain.converters
 
 import com.carolmusyoka.mercadeals.domain.model.Product
-import com.carolmusyoka.mercadeals.domain.model.uiView.ProductDetail
+import com.carolmusyoka.mercadeals.domain.model.detailView.ProductDetail
 
 
 fun Product.toProduct() = ProductDetail(

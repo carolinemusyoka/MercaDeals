@@ -5,13 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.carolmusyoka.mercadeals.domain.model.NetworkResult
 import com.carolmusyoka.mercadeals.domain.model.UiState
 import com.carolmusyoka.mercadeals.domain.usecases.ProductsUseCase
+import com.carolmusyoka.mercadeals.room.entity.ProductsRoom
+import com.carolmusyoka.mercadeals.room.repo.ProductsRoomRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductViewModel @Inject constructor(private val productsUseCase: ProductsUseCase): ViewModel() {
+class ProductViewModel @Inject constructor(
+    private val productsUseCase: ProductsUseCase
+): ViewModel() {
 
     private val _productResponse: MutableStateFlow<UiState> = MutableStateFlow(UiState(true, null, false))
     val products get() = _productResponse

@@ -1,33 +1,31 @@
 package com.carolmusyoka.mercadeals.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.carolmusyoka.mercadeals.navigation.DashDestinations.PRODUCT_DETAIL_ID
-import com.carolmusyoka.mercadeals.navigation.DashDestinations.PRODUCT_DETAIL_ROUTE
 import com.carolmusyoka.mercadeals.presentation.screens.ProductDetailScreen
 
-object DashDestinations {
-    const val HOME_ROUTE = "home"
-    const val PRODUCT_DETAIL_ROUTE = "place"
-    const val PRODUCT_DETAIL_ID = "productId"
+sealed class DashDestinations(val route: String) {
+    object HomeRoute: DashDestinations("home")
+    object  ProductDetail: DashDestinations("{productId}/detail")
+
+    fun createRoute(productId: String) = "$productId/detail"
 }
 
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = DashDestinations.HOME_ROUTE,
+    startDestination: String = DashDestinations.HomeRoute.route,
     openDrawer: () -> Unit,
 
-) {
+    ) {
     val actions = remember { MainActions(navController) }
 
     NavHost(
@@ -35,29 +33,28 @@ fun NavGraph(
         startDestination = startDestination,
     ) {
         navigation(
-            route = DashDestinations.HOME_ROUTE,
+            route = DashDestinations.HomeRoute.route,
             startDestination = HomeTabs.HOME.route
         ) {
             addHomeGraph(
                 navController = navController,
-                navToProductDetail = { actions.navigateToPlaceDetail("temp") },
+                navToProductDetail = {  },
                 openDrawer = openDrawer,
                 navToSearch = { navController.navigate(HomeTabs.SEARCH.route)},
                 modifier = modifier,
             )
         }
         composable(
-            route = "$PRODUCT_DETAIL_ROUTE/{$PRODUCT_DETAIL_ID}",
-            arguments = listOf(
-                navArgument(PRODUCT_DETAIL_ID) { type = NavType.StringType }
-            )
-        ) {
+            route = DashDestinations.ProductDetail.route,
+
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getString("productId") ?: ""
+            Log.d("TAG", "NavGraph: productId: $productId")
             ProductDetailScreen(
                 navBack = { navController.navigateUp() },
                 navigateToFavorite = { navController.navigate(HomeTabs.SEARCH.route) },
                 modifier = modifier,
-                navToPlaceDetail = { actions.navigateToPlaceDetail("temp") },
-                productId = "1"
+                productId = productId,
             )
         }
     }
@@ -73,7 +70,7 @@ class MainActions(navController: NavHostController) {
         navController.popBackStack()
         navController.navigate(HomeTabs.HOME.route)
     }
-    val navigateToPlaceDetail = { placeId: String ->
-        navController.navigate(route = "$PRODUCT_DETAIL_ROUTE/$placeId")
+    val navigateToProductDetail = { productId: String ->
+        navController.navigate(DashDestinations.ProductDetail.createRoute(productId))
     }
 }

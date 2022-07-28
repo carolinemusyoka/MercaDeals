@@ -1,4 +1,4 @@
-package com.carolmusyoka.mercadeals.domain.model.uiView
+package com.carolmusyoka.mercadeals.domain.model.detailView
 
 import com.carolmusyoka.mercadeals.domain.model.Rating
 

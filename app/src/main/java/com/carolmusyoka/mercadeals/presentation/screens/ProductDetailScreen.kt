@@ -10,6 +10,8 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,29 +20,31 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.carolmusyoka.mercadeals.domain.model.AllProductsResponse
-import com.carolmusyoka.mercadeals.domain.model.Product
+import com.carolmusyoka.mercadeals.domain.model.detailView.UiState
 import com.carolmusyoka.mercadeals.presentation.components.TopAppBarWithBack
 import com.carolmusyoka.mercadeals.presentation.theme.*
-import com.carolmusyoka.mercadeals.presentation.viewmodel.ProductViewModel
+import com.carolmusyoka.mercadeals.presentation.viewmodel.ProductDetailViewModel
 
 
 @Composable
 fun ProductDetailScreen(
     navBack: () -> Unit,
     navigateToFavorite: () -> Unit,
-    navToPlaceDetail: () -> Unit,
-    productId: String,
-    viewModel: ProductViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    productId:String,
+    viewModel: ProductDetailViewModel = hiltViewModel()
 ) {
+
+    val productDetail = remember{
+        viewModel.getProductDetail(productId.toInt())
+        viewModel.productDetail
+    }.collectAsState()
 
     Scaffold(
         topBar = {
@@ -79,7 +83,7 @@ fun ProductDetailScreen(
                            end.linkTo(parent.end)
                        }){
 
-//                       ProductImage(product)
+                       ProductImage(productDetail.value.data?.image ?:"" )
                    }
                    Surface(
                        color = Color.White,
@@ -102,11 +106,11 @@ fun ProductDetailScreen(
                                .fillMaxSize()
                                .padding(30.dp)
                        ){
-//                           ProductTitleAndPrice(product)
-//                           Spacer(modifier = Modifier.padding(10.dp))
-//                           RatingsAndNumberOfPeople(product)
-//                           Spacer(modifier = Modifier.padding(10.dp))
-//                           ProductDescription(product)
+                           ProductTitleAndPrice(productDetail)
+                           Spacer(modifier = Modifier.padding(10.dp))
+                           RatingsAndNumberOfPeople(productDetail)
+                           Spacer(modifier = Modifier.padding(10.dp))
+                           ProductDescription(productDetail)
                        }
                        
                    }
@@ -119,7 +123,10 @@ fun ProductDetailScreen(
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun ProductImage(product: Product) {
+fun ProductImage(imageUrl: String) {
+
+
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,7 +135,7 @@ fun ProductImage(product: Product) {
             .fillMaxHeight()
     ) {
          Image(
-             painter = rememberImagePainter(product.image),
+             painter = rememberImagePainter(imageUrl),
              contentDescription = "",
              modifier = Modifier
                  .size(250.dp)
@@ -137,7 +144,7 @@ fun ProductImage(product: Product) {
 }
 
 @Composable
-fun ProductTitleAndPrice(product: Product) {
+fun ProductTitleAndPrice(product: State<UiState>) {
     Column (
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -156,7 +163,7 @@ fun ProductTitleAndPrice(product: Product) {
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Text(
-                text = product.title,
+                text = product.value.data?.title ?: "",
                 color = titleTextColor,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
@@ -178,7 +185,7 @@ fun ProductTitleAndPrice(product: Product) {
                             )
                         ){
                             // Product price
-                            append(product.price.toString())
+                            append(product.value.data?.price.toString())
                         }
                     },
                     style = MaterialTheme.typography.subtitle1,
@@ -194,7 +201,7 @@ fun ProductTitleAndPrice(product: Product) {
 
 
 @Composable
-fun RatingsAndNumberOfPeople(product: Product) {
+fun RatingsAndNumberOfPeople(product: State<UiState>) {
     Column(modifier = Modifier.fillMaxWidth()){
         Text(
             text = "Product Ratings",
@@ -224,7 +231,7 @@ fun RatingsAndNumberOfPeople(product: Product) {
                     modifier = Modifier.padding(end = 4.dp)
                 )
                 // Populate the star rating
-                Text(text = " ${product.rating.rate} Star Rating", color = Color.DarkGray)
+                Text(text = " ${product.value.data?.rating?.rate} Star Rating", color = Color.DarkGray)
             }
             OutlinedButton(
                 onClick = { /*TODO*/ },
@@ -242,14 +249,14 @@ fun RatingsAndNumberOfPeople(product: Product) {
                     modifier = Modifier.padding(end = 4.dp)
                 )
                 //populate number of people who have rated this product
-                Text(text = "${product.rating.count}", color = Color.DarkGray)
+                Text(text = "${product.value.data?.rating?.count}", color = Color.DarkGray)
             }
         }
     }
 }
 
 @Composable
-fun ProductDescription(product: Product) {
+fun ProductDescription(product: State<UiState>) {
    Column(modifier = Modifier.fillMaxWidth()) {
          Text(
               text = "Product Description",
@@ -258,7 +265,7 @@ fun ProductDescription(product: Product) {
 
        Spacer(modifier = Modifier.padding(5.dp))
 
-       Text(text = product.description,
+       Text(text = product.value.data?.description ?: "",
                 color = lightblack,
                 fontSize = 14.sp)
 

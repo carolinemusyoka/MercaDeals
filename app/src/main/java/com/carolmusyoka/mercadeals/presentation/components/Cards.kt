@@ -1,6 +1,7 @@
 package com.carolmusyoka.mercadeals.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -21,18 +23,21 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.carolmusyoka.mercadeals.R
 import com.carolmusyoka.mercadeals.domain.model.Product
 import com.carolmusyoka.mercadeals.domain.model.Rating
+import com.carolmusyoka.mercadeals.navigation.DashDestinations
 import com.carolmusyoka.mercadeals.presentation.theme.*
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalCoilApi::class)
 @Composable
-fun ProductCardItem(product: Product,
-                    navPlaceDetail: () -> Unit ){
-    val product = product
+fun ProductCardItem(
+    product: Product,
+    navController: NavController,
+){
     Card(
         modifier = Modifier
             .width(200.dp)
@@ -41,7 +46,9 @@ fun ProductCardItem(product: Product,
         ,
         shape = RoundedCornerShape(16.dp),
         elevation = 2.dp,
-        onClick = navPlaceDetail
+        onClick = {
+            navController.navigate(DashDestinations.ProductDetail.createRoute(product.id.toString()))
+        }
     ) {
         Column(
             modifier = Modifier
@@ -88,11 +95,11 @@ fun ProductCardItem(product: Product,
                     )
                 }
                 Spacer(modifier = Modifier.height(2.5.dp))
-                if (product?.rating?.rate!! < 4.5){
+                if (product.rating.rate.toString() < 4.5.toString()){
                     Text(
                         text = "Trending",
                         fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp,
+                        fontSize = 10.sp,
                         color = blueDark,
                         modifier = Modifier.padding(bottom = 10.dp)
                     )
@@ -213,22 +220,7 @@ fun SaveItemCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProductCardItemPreview() {
-    ProductCardItem(
-        product = Product(
-            category = "Womens Clothing",
-            description = "Hello World",
-            id = 1,
-            image = "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80",
-            price = 0.00,
-            rating = Rating(rate = 4.5, count = 10),
-            title = "Hello",
-        ),
-        navPlaceDetail = { }
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable

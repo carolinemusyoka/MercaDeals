@@ -40,7 +40,8 @@ fun NavGraphBuilder.addHomeGraph(
             openDrawer = openDrawer,
             navToProductDetail = navToProductDetail,
             navToSearch = { navController.navigate(HomeTabs.SEARCH.route) },
-            modifier = modifier
+            modifier = modifier,
+            navController = navController
         )
     }
     composable(HomeTabs.SEARCH.route){

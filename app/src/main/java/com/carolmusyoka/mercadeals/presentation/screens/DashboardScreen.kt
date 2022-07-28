@@ -1,7 +1,6 @@
 package com.carolmusyoka.mercadeals.presentation.screens
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -14,7 +13,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.ParagraphStyle
@@ -26,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.carolmusyoka.mercadeals.domain.model.Product
 import com.carolmusyoka.mercadeals.domain.model.UiState
 import com.carolmusyoka.mercadeals.presentation.components.CustomTopBar
 import com.carolmusyoka.mercadeals.presentation.components.ProductCardItem
@@ -41,7 +41,8 @@ fun DashboardScreen(
     navToProductDetail:() -> Unit,
     navToSearch:() -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProductViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: ProductViewModel = hiltViewModel(),
 ) {
     val scrollState = rememberScrollState()
     val products = remember {
@@ -49,12 +50,24 @@ fun DashboardScreen(
           viewModel.products
     }.collectAsState()
 
+//    val insertData = remember {
+//        products.value.data?.map {
+//            roomViewModelRoom.insertProductsData(it.toProductRoom())
+//        }
+//    }
+
+//    val insertProductsRoom = products.value.data?.map {
+//        it.toProductRoom()
+//    }
+//    val saveToRoom = viewModel.insertProductsData(insertProductsRoom!!)
+
     Box(modifier = Modifier
         .fillMaxSize()
         .verticalScroll(scrollState)
     ){
         val context = LocalContext.current
         Column(modifier = Modifier.padding(30.dp)){
+
             // Custom TopBar goes here
             CustomTopBar(openDrawer)
             // Have this spacing for each section
@@ -64,7 +77,7 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            ProductList(products, navToProductDetail)
+            ProductList(products, navController)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -79,32 +92,6 @@ fun DashboardScreen(
 
 }
 
-@Composable
-fun RecommendedProducts() {
-    Column {
-        Title(text = "Recommended")
-        // Reccomended products
-//        Image(
-//            painter = painterResource(id = R.drawable.recommended_products),
-//            contentDescription = null,
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(150.dp)
-//                .clip(MaterialTheme.shapes.medium)
-//        )
-//        Spacer(modifier = Modifier.height(16.dp))
-//         Image(
-//             painter = painterResource(id = R.drawable.recommended_products),
-//             contentDescription = null,
-//             contentScale = ContentScale.Crop,
-//             modifier = Modifier
-//                 .fillMaxWidth()
-//                 .height(150.dp)
-//                 .clip(MaterialTheme.shapes.medium)
-//         )
-    }
-}
 
 @Composable
 fun ProductsSearch(navToSearch: () -> Unit) {
@@ -200,39 +187,27 @@ fun ProductsSearch(navToSearch: () -> Unit) {
 
 
 @Composable
-fun ProductList(products: State<UiState>, navToProductDetail: () -> Unit) {
+fun ProductList(products: State<UiState>,
+                navController: NavController) {
   Column {
       Title(text = "Products On Sale")
 
-      LazyRow(content = {
-          when{
-                products.value.isLoading -> {
-                    // Loading
-                }
-                products.value.data != null  -> {
-                    items(products.value.data!!.size){ product ->
-                        products.value.data!![product].let {
-                            ProductCardItem(it, navToProductDetail)
-                        }
-                    }
-                }
-                products.value.error -> {
-                   // Some Error View
-                }
+      LazyRow {
+          when {
+              products.value.isLoading -> {
+                  // Loading
+              }
+              products.value.data != null -> {
+                  items(products.value.data!!.size) { product ->
+                      products.value.data!![product].let {
+                          ProductCardItem(it, navController = navController)
+                      }
+                  }
+              }
+              products.value.error -> {
+                  // Some Error View
+              }
           }
-      })
+      }
   }
-}
-
-@Preview
-@Composable
-fun PreviewSearchSection(){
-    MercaDealsTheme {
-        DashboardScreen(
-            navToProfile = { /*TODO*/ },
-            openDrawer = { /*TODO*/ },
-            navToSearch = { /*TODO*/ },
-            navToProductDetail = { /*TODO*/ }
-        )
-    }
 }

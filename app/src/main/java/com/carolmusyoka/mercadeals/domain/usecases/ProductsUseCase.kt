@@ -6,6 +6,7 @@ import com.carolmusyoka.mercadeals.domain.model.Product
 import com.carolmusyoka.mercadeals.domain.repository.ProductsRepository
 import javax.inject.Inject
 
+
 class ProductsUseCase @Inject constructor(private val productsRepository: ProductsRepository) {
      suspend fun invoke(): NetworkResult<AllProductsResponse> {
           return productsRepository.getAllProducts()

@@ -14,13 +14,4 @@ class ProductRepositoryImpl @Inject constructor(private val apiService: ApiServi
         return safeApiCall { apiService.getProductById(id) }
     }
 
-    override suspend fun categories(): NetworkResult<ProductCategories> {
-        return safeApiCall { apiService.getAllCategories() }
-    }
-
-    override suspend fun productUnderCategory(category: String): NetworkResult<ProductsUnderCategoryResponse> {
-        return safeApiCall { apiService.getProductsByCategory(category) }
-    }
-
-
 }

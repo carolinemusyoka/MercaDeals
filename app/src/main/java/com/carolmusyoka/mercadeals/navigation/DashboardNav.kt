@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 
+
+// This is the NavHost for the main navigation.
 fun DashboardNav(
     navToProductDetails: () -> Unit,
     navToCart: () -> Unit,

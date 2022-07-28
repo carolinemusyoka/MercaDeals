@@ -65,7 +65,7 @@ fun CustomTopBar(
 fun TopAppBarWithBack(onBackClick: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth()
-            .padding(30.dp),
+            .padding(15.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
     ) {

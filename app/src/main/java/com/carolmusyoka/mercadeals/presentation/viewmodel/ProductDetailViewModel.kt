@@ -20,7 +20,7 @@ class ProductDetailViewModel @Inject constructor(private val productDetailUseCas
             _detailResponse.emit(UiState(true, null, false))
             when (val response = productDetailUseCase.invoke(id)) {
                 is NetworkResult.Success -> {
-                    _detailResponse.emit(UiState(false, null, false))
+                    _detailResponse.emit(UiState(false, response.value, false))
                 }
                 is NetworkResult.Failure -> {
                     _detailResponse.emit(UiState(false, null, true))

@@ -8,8 +8,6 @@ import com.carolmusyoka.mercadeals.domain.model.*
 interface ProductsRepository {
     suspend fun getAllProducts(): NetworkResult<AllProductsResponse>
     suspend fun getProduct(id: Int): NetworkResult<ProductsWithId>
-    suspend fun categories(): NetworkResult<ProductCategories>
-    suspend fun productUnderCategory(category: String): NetworkResult<ProductsUnderCategoryResponse>
 
 
 }

@@ -11,7 +11,6 @@ import com.carolmusyoka.mercadeals.presentation.viewmodel.ProductViewModel
 fun MercaDealsApp(){
     MercaDealsTheme {
         val navController = rememberNavController()
-
         MainNavGraph(
             navController = navController
         )

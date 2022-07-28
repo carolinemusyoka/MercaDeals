@@ -8,8 +8,4 @@ class ApiHelper (private val apiService: ApiService) {
 
     suspend fun getProductWithId(productId: Int) = apiService.getProductById(productId)
 
-    suspend fun getAllCategories() = apiService.getAllCategories()
-
-    suspend fun getProductsWithCategory(categoryId: String) = apiService.getProductsByCategory(categoryId)
-
 }

@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.carolmusyoka.mercadeals.domain.model.NetworkResult
 import com.carolmusyoka.mercadeals.domain.model.UiState
 import com.carolmusyoka.mercadeals.domain.usecases.ProductsUseCase
-import com.carolmusyoka.mercadeals.room.entity.ProductsRoom
-import com.carolmusyoka.mercadeals.room.repo.ProductsRoomRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

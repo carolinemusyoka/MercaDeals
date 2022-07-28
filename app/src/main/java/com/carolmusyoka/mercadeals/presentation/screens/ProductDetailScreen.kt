@@ -1,5 +1,7 @@
 package com.carolmusyoka.mercadeals.presentation.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,12 +12,12 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -46,75 +48,79 @@ fun ProductDetailScreen(
         viewModel.productDetail
     }.collectAsState()
 
+
     Scaffold(
         topBar = {
             TopAppBarWithBack(
-                onBackClick = {}
+                onBackClick = navBack,
             )
         },
         backgroundColor = Color.White,
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {},
-                backgroundColor = blueDark
-            ){
-                Icon(
-                    imageVector = Icons.Default.ShoppingCart,
-                    contentDescription = "Add to cart",
-                    tint = Color.White
-                )
-            }
-        },
         content = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ){
-               ConstraintLayout {
-                   val (imagesliderref, addtocartref) = createRefs()
-                   Box(modifier =
-                   Modifier
-                       .height(280.dp)
-                       .constrainAs(imagesliderref) {
-                           top.linkTo(imagesliderref.top)
-                           bottom.linkTo(imagesliderref.top)
-                           start.linkTo(parent.start)
-                           end.linkTo(parent.end)
-                       }){
+            val context = LocalContext.current
+            when {
+                productDetail.value.isLoading -> {
 
-                       ProductImage(productDetail.value.data?.image ?:"" )
-                   }
-                   Surface(
-                       color = Color.White,
-                       shape = RoundedCornerShape(40.dp)
-                           .copy(
-                               bottomStart = ZeroCornerSize,
-                               bottomEnd = ZeroCornerSize
-                           ),
-                       modifier = Modifier
-                           .fillMaxSize()
-                           .padding(top = 300.dp)
-                           .constrainAs(addtocartref) {
-                               bottom.linkTo(parent.bottom)
-                               start.linkTo(parent.start)
-                               end.linkTo(parent.end)
-                           }
-                   ) {
-                       Column (
-                           modifier = Modifier
-                               .fillMaxSize()
-                               .padding(30.dp)
-                       ){
-                           ProductTitleAndPrice(productDetail)
-                           Spacer(modifier = Modifier.padding(10.dp))
-                           RatingsAndNumberOfPeople(productDetail)
-                           Spacer(modifier = Modifier.padding(10.dp))
-                           ProductDescription(productDetail)
-                       }
-                       
-                   }
-               }
+                }
+                productDetail.value.data != null -> {
+                    // Data
+                    Log.d("TAG", "ProductDetailScreen: ${productDetail.value.data}")
+                    val productsValue = productDetail.value
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ){
+                        ConstraintLayout {
+                            val (imagesliderref, addtocartref) = createRefs()
+                            Box(modifier =
+                            Modifier
+                                .height(280.dp)
+                                .constrainAs(imagesliderref) {
+                                    top.linkTo(imagesliderref.top)
+                                    bottom.linkTo(imagesliderref.top)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }){
+
+                                ProductImage(productsValue.data?.image ?: "")
+                            }
+                            Surface(
+                                color = Color.White,
+                                shape = RoundedCornerShape(40.dp)
+                                    .copy(
+                                        bottomStart = ZeroCornerSize,
+                                        bottomEnd = ZeroCornerSize
+                                    ),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(top = 300.dp)
+                                    .constrainAs(addtocartref) {
+                                        bottom.linkTo(parent.bottom)
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                    }
+                            ) {
+                                Column (
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(30.dp)
+                                ){
+                                    ProductTitleAndPrice(productsValue)
+                                    Spacer(modifier = Modifier.padding(10.dp))
+                                    RatingsAndNumberOfPeople(productsValue)
+                                    Spacer(modifier = Modifier.padding(10.dp))
+                                    ProductDescription(productsValue)
+                                }
+
+                            }
+                        }
+                    }
+                }
+                else -> {
+                    // Error
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     )
@@ -144,7 +150,7 @@ fun ProductImage(imageUrl: String) {
 }
 
 @Composable
-fun ProductTitleAndPrice(product: State<UiState>) {
+fun ProductTitleAndPrice(product: UiState) {
     Column (
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -157,42 +163,21 @@ fun ProductTitleAndPrice(product: State<UiState>) {
         )
         Spacer(modifier = Modifier.padding(5.dp))
 
-        Row (
+        Column (
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ){
             Text(
-                text = product.value.data?.title ?: "",
+                text = product.data?.title ?: "",
                 color = titleTextColor,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 18.sp,
+                fontWeight = FontWeight.ExtraBold
             )
-            Column(modifier = Modifier.wrapContentHeight()) {
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                blueDark,
-                                fontWeight = FontWeight.Bold
-                            )
-                        ){
-                            append("$ ")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                titleTextColor
-                            )
-                        ){
-                            // Product price
-                            append(product.value.data?.price.toString())
-                        }
-                    },
-                    style = MaterialTheme.typography.subtitle1,
-                    modifier = Modifier,
-                    fontSize = 16.sp
-                )
-            }
+            Spacer(modifier = Modifier.padding(5.dp))
+            Text(
+                text = "$ ${product.data?.price ?: 0}",
+                fontWeight = FontWeight.SemiBold,
+                color = blueDark,
+                fontSize = 16.sp,)
 
         }
 
@@ -201,13 +186,13 @@ fun ProductTitleAndPrice(product: State<UiState>) {
 
 
 @Composable
-fun RatingsAndNumberOfPeople(product: State<UiState>) {
+fun RatingsAndNumberOfPeople(product: UiState) {
     Column(modifier = Modifier.fillMaxWidth()){
         Text(
             text = "Product Ratings",
             color = titleTextColor,
             fontSize = 18.sp,
-        )
+            fontWeight = FontWeight.SemiBold)
         Spacer(modifier = Modifier.padding(10.dp))
 
         Row(
@@ -231,7 +216,7 @@ fun RatingsAndNumberOfPeople(product: State<UiState>) {
                     modifier = Modifier.padding(end = 4.dp)
                 )
                 // Populate the star rating
-                Text(text = " ${product.value.data?.rating?.rate} Star Rating", color = Color.DarkGray)
+                Text(text = " ${product.data?.rating?.rate} Star Rating", color = Color.DarkGray)
             }
             OutlinedButton(
                 onClick = { /*TODO*/ },
@@ -249,23 +234,24 @@ fun RatingsAndNumberOfPeople(product: State<UiState>) {
                     modifier = Modifier.padding(end = 4.dp)
                 )
                 //populate number of people who have rated this product
-                Text(text = "${product.value.data?.rating?.count}", color = Color.DarkGray)
+                Text(text = "${product.data?.rating?.count}", color = Color.DarkGray)
             }
         }
     }
 }
 
 @Composable
-fun ProductDescription(product: State<UiState>) {
+fun ProductDescription(product: UiState) {
    Column(modifier = Modifier.fillMaxWidth()) {
          Text(
               text = "Product Description",
-              color = titleTextColor,
-              fontSize = 18.sp,)
+             color = titleTextColor,
+             fontSize = 18.sp,
+             fontWeight = FontWeight.SemiBold)
 
        Spacer(modifier = Modifier.padding(5.dp))
 
-       Text(text = product.value.data?.description ?: "",
+       Text(text = product.data?.description ?: "",
                 color = lightblack,
                 fontSize = 14.sp)
 

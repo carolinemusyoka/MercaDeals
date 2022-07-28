@@ -51,7 +51,7 @@ fun MainNavGraph(
             OnboardingScreen(
                 navToSignUpScreen = {navController.navigate(MainScreen.SIGNUP.route)},
                 navToLoginScreen = {navController.navigate(MainScreen.LOGIN.route)},
-                navToHomeScreen = {navController.navigate(DashDestinations.HOME_ROUTE)}
+                navToHomeScreen = {navController.navigate(DashDestinations.HomeRoute.route)}
             )
         }
         composable(
@@ -60,15 +60,15 @@ fun MainNavGraph(
             RegistrationScreen(
                 navToSignInScreen = {navController.navigate(MainScreen.SIGNUP.route)},
                 navToLoginScreen = {navController.navigate(MainScreen.LOGIN.route)},
-                navToHomeScreen = {navController.navigate(DashDestinations.HOME_ROUTE)})
+                navToHomeScreen = {navController.navigate(DashDestinations.HomeRoute.route)})
         }
         composable(
             route = MainScreen.LOGIN.route,
         ){
             LoginScreen(
-                navToSignUpScreen = {navController.navigate(DashDestinations.HOME_ROUTE)},
-                navToForgotPasswordScreen = {navController.navigate(DashDestinations.HOME_ROUTE)},
-                navToHomeScreen = {navController.navigate(DashDestinations.HOME_ROUTE)})
+                navToSignUpScreen = {navController.navigate(DashDestinations.HomeRoute.route)},
+                navToForgotPasswordScreen = {navController.navigate(DashDestinations.HomeRoute.route)},
+                navToHomeScreen = {navController.navigate(DashDestinations.HomeRoute.route)})
         }
         composable(
             route = MainScreen.HOME.route,

@@ -1,7 +1,7 @@
 package com.carolmusyoka.mercadeals.di
 
 import com.carolmusyoka.mercadeals.domain.repository.ProductsRepository
-import com.carolmusyoka.mercadeals.domain.usecases.CategoryListUseCase
+import com.carolmusyoka.mercadeals.domain.usecases.ProductDetailUseCase
 import com.carolmusyoka.mercadeals.domain.usecases.ProductsUseCase
 import dagger.Module
 import dagger.Provides
@@ -21,5 +21,5 @@ class DomainModule {
     @Provides
     @Singleton
     fun provideCategoryUseCase(productsRepository: ProductsRepository) =
-        CategoryListUseCase(productsRepository)
+        ProductDetailUseCase(productsRepository)
 }
